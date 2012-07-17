@@ -124,7 +124,7 @@ $xoops_module_header .="<script src='".$gnavi_googlemap_url."/maps/api/js?sensor
          mapTypeId: google.maps.MapTypeId.ROADMAP
 
         };
-        var map = new google.maps.Map(document.getElementById('map_canvas'),myOptions);
+        var map = new google.maps.Map(document.getElementById('map'),myOptions);
         var Marker = new google.maps.Marker({
          position: myLatLng,
          map: map,
