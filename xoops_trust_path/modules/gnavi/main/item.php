@@ -110,24 +110,39 @@ $arricon = gnavi_get_gicon($icon);
 $xoops_module_header = $xoopsTpl->get_template_vars( "xoops_module_header" ) ."\n" ."<link rel='stylesheet' type='text/css' href='css/gnavi.css'/>";
 if($gnavi_usegooglemap && (floatval($photo['lng'])<>0 || floatval($photo['lat'])<>0 )){
 $xoopsTpl->assign( 'map' , _MD_GNAV_MAP_SHOW ) ;
-$xoops_module_header .="<script src='".$gnavi_googlemap_url."/maps?file=api&amp;v=2&amp;key=$gnavi_googlemapapi_key' type='text/javascript' charset='utf-8'></script>
+
+$xoops_module_header .="<script src='".$gnavi_googlemap_url."/maps/api/js?sensor=false'></script>
 <script src='js/map.js' type='text/javascript' charset='utf-8'></script>
 <script type='text/javascript'>
-//<![CDATA[
-	$gnavi_lang_java
+    $gnavi_lang_java
 	$mykmls
-	gn_ilt=".$photo['lat'].";
-	gn_ilg=".$photo['lng'].";
-	gn_iz=".$photo['zoom'].";
-	gn_it='".$photo['mtype']."';
-	".$arricon."
-	window.onload = ShowItemGMap;
-//]]>
+      function initialize() {
+	var myLatLng = new google.maps.LatLng(".$photo['lat'].", ".$photo['lng'].");
+        var myOptions = {
+         zoom: ".$photo['zoom'].",
+         center: myLatLng,
+         mapTypeId: google.maps.MapTypeId.ROADMAP
+
+        };
+        var map = new google.maps.Map(document.getElementById('map_canvas'),myOptions);
+        var Marker = new google.maps.Marker({
+         position: myLatLng,
+         map: map,
+    });
+
+      }
+      
+      google.maps.event.addDomListener(window, 'load', initialize);
+	        $(function() {
+		$( '#tabs' ).tabs({ fx: { height: 'toggle', duration: 'slow'  } });
+                
+	});
+
 </script>";
 }
 
 if($gnavi_use_rss>0 && $photo['rss']!=""){
-$xoops_module_header .="<script src='http://www.google.com/jsapi?key=$gnavi_googlemapapi_key' type='text/javascript' charset='utf-8'></script>
+$xoops_module_header .="
 <script type='text/javascript'>
 //<![CDATA[
 	var gn_feedlink='".$photo['rss']."';
