@@ -164,34 +164,30 @@ function gn_feedLoader(){
 
 	var feed = new google.feeds.Feed(gn_feedlink);
 	feed.setNumEntries(gn_feednum);   
-      feed.load(function(result) {
-        if (!result.error) {
-			var container = document.getElementById("feed");
-			var s="";
-			s+="<ul>";
-			for (var i = 0; i < result.feed.entries.length; i++) {
-				var entry = result.feed.entries[i];
-				s+="<li>"+df(entry.publishedDate)+"&nbsp;<a href='"+entry.link+"' target='_blank'>"+entry.title+"</a></li>";
-			}
-			s+="</ul>";
-			s+="<div align='right'><img src='images/rss.gif' align='absmiddle'/>&nbsp;<a href='"+gn_feedlink+"' target='_blank'>"+result.feed.title+"</a>";
-			var d = document.createElement("div");
-			d.innerHTML=s;
-			container.appendChild(d);
-        }
-      });
+        feed.load(function(result) {
+        if (!result.error){
+      var container = document.getElementById("feed");
+      var htmlstr = "";
+      htmlstr += '<ul>'
+      for (var i = 0; i < result.feed.entries.length; i++) {
+        var entry = result.feed.entries[i];
+         
+        htmlstr += '<li><a href="' + entry.link + '">' + entry.title + '</a><br />';
 
-	function df(a){
-		var d,y,m,d;
-		d = new Date(a);
-		y = d.getYear();
-		m = d.getMonth() + 1;
-		d = d.getDate();
-		if (y < 2000) y += 1900;
-		if (m < 10) m = "0" + m;
-		if (d < 10) m = "0" + d;
-		return y + "/" + m + "/" + d;
-	}
+        var pdate = new Date(entry.publishedDate);
+        var strdate = (pdate.getYear() + 1900) + '/' + (pdate.getMonth() + 1) + '/' + pdate.getDate();
+        htmlstr += '<p>' + strdate + '</p></li>';
+      }
+       htmlstr += "</ul>"
+       htmlstr += "<div align='right'><img src='images/rss.gif' align='absmiddle'/> <a href='"+gn_feedlink+"' target='_blank'>"+result.feed.title+"</a>";
+
+       container.innerHTML = htmlstr;
+    }else{
+       alert(result.error.code + ":" + result.error.message);
+    }
+  });
+}
+
 }
 
 function getMapTypes(m){
