@@ -160,34 +160,33 @@ function addGMapTypeControl(){
 		}
 }
 
+// rss from item.php
 function gn_feedLoader(){
 
 	var feed = new google.feeds.Feed(gn_feedlink);
-	feed.setNumEntries(gn_feednum);   
-        feed.load(function(result) {
-        if (!result.error){
+	feed.setNumEntries(gn_feednum);
+	feed.load(function (result){
+    if (!result.error){
       var container = document.getElementById("feed");
       var htmlstr = "";
-      htmlstr += '<ul>'
+      htmlstr += '<h2><a href="' + result.feed.link + '">' + result.feed.title + '</a></h2>';
+
       for (var i = 0; i < result.feed.entries.length; i++) {
         var entry = result.feed.entries[i];
-         
-        htmlstr += '<li><a href="' + entry.link + '">' + entry.title + '</a><br />';
+
+        htmlstr += '<h3><a href="' + entry.link + '">' + entry.title + '</a></h3>';
+        htmlstr += '<p>' + entry.contentSnippet + '</p>';
 
         var pdate = new Date(entry.publishedDate);
-        var strdate = (pdate.getYear() + 1900) + '/' + (pdate.getMonth() + 1) + '/' + pdate.getDate();
-        htmlstr += '<p>' + strdate + '</p></li>';
+        var strdate = (pdate.getMonth() + 1) + '/' + pdate.getDate() + '';
+        htmlstr += '<p>' + strdate + '</p>';
       }
-       htmlstr += "</ul>"
-       htmlstr += "<div align='right'><img src='images/rss.gif' align='absmiddle'/> <a href='"+gn_feedlink+"' target='_blank'>"+result.feed.title+"</a>";
 
        container.innerHTML = htmlstr;
     }else{
        alert(result.error.code + ":" + result.error.message);
     }
   });
-}
-
 }
 
 function getMapTypes(m){
