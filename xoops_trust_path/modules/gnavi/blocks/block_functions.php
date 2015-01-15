@@ -105,8 +105,9 @@ function b_gnavi_itemblock_show( $options ,$this_template,$query)
 	$block = array() ;
 	$myts =& MyTextSanitizer::getInstance() ;
 
-	$result = $xoopsDB->query("SELECT l.lid , l.cid , l.title , l.ext , l.res_x , l.res_y , l.submitter , l.status , l.date AS unixtime , l.hits , l.rating , l.votes , l.comments , c.title AS cat_title FROM $table_photos l LEFT JOIN $table_cat c ON l.cid=c.cid WHERE l.status>0 AND $whr_cat AND $whr_ext $query" , $photos_num , 0 ) ;
-
+	//$result = $xoopsDB->query("SELECT l.lid , l.cid , l.title , l.ext , l.res_x , l.res_y , l.submitter , l.status , l.date AS unixtime , l.hits , l.rating , l.votes , l.comments , c.title AS cat_title FROM $table_photos l LEFT JOIN $table_cat c ON l.cid=c.cid WHERE l.status>0 AND $whr_cat AND $whr_ext $query" , $photos_num , 0 ) ;
+        $result = $xoopsDB->query("SELECT l.lid , l.cid , l.title , l.ext , l.res_x , l.res_y , l.submitter , l.status , l.date AS unixtime , l.hits , l.rating , l.votes , l.comments , c.title AS cat_title , t.description FROM $table_photos l LEFT JOIN $table_cat c ON l.cid=c.cid LEFT JOIN $table_text t ON l.lid=t.lid WHERE l.status>0 AND $whr_cat AND $whr_ext $query" , $photos_num , 0 ) ;
+        
 	$count = 1 ;
 	while( $photo = $xoopsDB->fetchArray( $result ) ) {
 
@@ -114,6 +115,7 @@ function b_gnavi_itemblock_show( $options ,$this_template,$query)
 		$photo['cat_title'] = $myts->makeTboxData4Show( $photo['cat_title'] ) ;
 		$photo['suffix'] = $photo['hits'] > 1 ? 'hits' : 'hit' ;
 		$photo['date'] = formatTimestamp( $photo['unixtime'] , 's' ) ;
+		$photo['description'] = xoops_substr(strip_tags($myts->displayTarea( $photo['description'] , 1 , 1 , 1 , 1 , 1 , 1 )),0,100);
 		$photo['thumbs_url'] = $thumbs_url ;
 		$photo['is_newphoto'] = ( $photo['unixtime'] > time() - 86400 * $gnavi_newdays && $photo['status'] == 1 );
 		$photo['is_updatedphoto'] = ( $photo['unixtime'] > time() - 86400 * $gnavi_newdays && $photo['status'] == 2 );
